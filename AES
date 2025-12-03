@@ -1,0 +1,19 @@
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
+
+public class Main{
+    public static void main(String[] args) throws Exception {
+
+        String message = "Hello AES";
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(128);
+        SecretKey key = keyGen.generateKey();
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encrypted = cipher.doFinal(message.getBytes());
+        System.out.println("Encrypted: " + new String(encrypted));
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        byte[] decrypted = cipher.doFinal(encrypted);
+        System.out.println("Decrypted: " + new String(decrypted));
+    }
+}
