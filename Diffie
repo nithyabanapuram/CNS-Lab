@@ -1,0 +1,19 @@
+import java.math.BigInteger;
+import java.security.SecureRandom;
+public class Main{
+    public static void main(String[] args) {
+        BigInteger p = new BigInteger("23"); 
+        BigInteger g = new BigInteger("5");   
+        SecureRandom rand = new SecureRandom();
+        BigInteger a = new BigInteger("6"); 
+        BigInteger b = new BigInteger("15"); 
+        BigInteger A = g.modPow(a, p); 
+        BigInteger B = g.modPow(b, p); 
+        BigInteger keyAlice = B.modPow(a, p); 
+        BigInteger keyBob   = A.modPow(b, p); 
+        System.out.println("Alice Public Key (A): " + A);
+        System.out.println("Bob Public Key   (B): " + B);
+        System.out.println("Shared Key (Alice): " + keyAlice);
+        System.out.println("Shared Key (Bob)  : " + keyBob);
+    }
+}
