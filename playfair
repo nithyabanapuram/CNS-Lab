@@ -1,0 +1,72 @@
+public class Main{
+    static char[][] generateMatrix(String key) {
+        key = key.toUpperCase().replaceAll("J", "I").replaceAll("[^A-Z]", "");
+        boolean[] used = new boolean[26];
+        char[][] matrix = new char[5][5];
+
+        int row = 0, col = 0;
+        for (char c : key.toCharArray()) {
+            if (!used[c - 'A']) {
+                matrix[row][col++] = c;
+                used[c - 'A'] = true;
+                if (col == 5) { col = 0; row++; }
+            }
+        }
+        for (char c = 'A'; c <= 'Z'; c++) {
+            if (c == 'J') continue;
+            if (!used[c - 'A']) {
+                matrix[row][col++] = c;
+                used[c - 'A'] = true;
+                if (col == 5) { col = 0; row++; }
+            }
+        }
+
+        return matrix;
+    }
+
+    static int[] pos(char[][] mat, char c) {
+        if (c == 'J') c = 'I';
+        for (int i = 0; i < 5; i++)
+            for (int j = 0; j < 5; j++)
+                if (mat[i][j] == c)
+                    return new int[]{i, j};
+        return null;
+    }
+
+    static String encryptPair(char a, char b, char[][] mat) {
+        int[] p1 = pos(mat, a);
+        int[] p2 = pos(mat, b);
+
+        if (p1[0] == p2[0]) 
+            return "" + mat[p1[0]][(p1[1] + 1) % 5] + mat[p2[0]][(p2[1] + 1) % 5];
+
+        if (p1[1] == p2[1])  
+            return "" + mat[(p1[0] + 1) % 5][p1[1]] + mat[(p2[0] + 1) % 5][p2[1]];
+        return "" + mat[p1[0]][p2[1]] + mat[p2[0]][p1[1]];
+    }
+
+    public static String encrypt(String text, String key) {
+        char[][] mat = generateMatrix(key);
+
+        text = text.toUpperCase().replaceAll("[^A-Z]", "").replace("J", "I");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.length(); i += 2) {
+            char a = text.charAt(i);
+            char b = (i + 1 < text.length()) ? text.charAt(i + 1) : 'X';
+            if (a == b) b = 'X';
+            sb.append(encryptPair(a, b, mat));
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        String key = "MONARCHY";
+        String plaintext = "HELLO";
+
+        String encrypted = encrypt(plaintext, key);
+
+        System.out.println("Key: " + key);
+        System.out.println("Plaintext: " + plaintext);
+        System.out.println("Ciphertext: " + encrypted);
+    }
+}
