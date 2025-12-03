@@ -1,0 +1,20 @@
+import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
+import java.util.Base64;
+
+public class Main{
+    public static void main(String[] args) throws Exception {
+        String text = "Hello CBC Mode";
+        SecretKey key = KeyGenerator.getInstance("AES").generateKey();
+        byte[] iv = new byte[16];
+        new java.security.SecureRandom().nextBytes(iv);
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
+        byte[] encrypted = cipher.doFinal(text.getBytes());
+        cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
+        byte[] decrypted = cipher.doFinal(encrypted);
+        System.out.println("Encrypted: " + Base64.getEncoder().encodeToString(encrypted));
+        System.out.println("Decrypted: " + new String(decrypted));
+    }
+}
