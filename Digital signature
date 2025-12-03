@@ -1,0 +1,17 @@
+import java.security.*;
+import java.util.Base64;
+
+public class Main{
+    public static void main(String[] args) throws Exception {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+        kpg.initialize(2048);
+        KeyPair kp = kpg.generateKeyPair();
+        String text = "Hello world";
+        Signature sign = Signature.getInstance("SHA256withRSA");
+        sign.initSign(kp.getPrivate());
+        sign.update(text.getBytes());
+        byte[] signature = sign.sign();
+        System.out.println("Text: " + text);
+        System.out.println("Digital Signature: " + Base64.getEncoder().encodeToString(signature));
+    }
+}
